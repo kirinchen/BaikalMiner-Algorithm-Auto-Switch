@@ -53,56 +53,32 @@ public class MinerSetuper {
 			@Override
 			public Boolean apply(WebDriver d) {
 
-				EventFiringWebDriver wd = new EventFiringWebDriver(d);
-				// create an object of class WebDriverListener and pass the
-				// driver instance
-				wd.register(new AbstractWebDriverEventListener() {
-					@Override
-					public void afterNavigateTo(String url, WebDriver driver) {
-						System.out.println("afterNavigateTo=" + url);
-					}
-
-					@Override
-					public void beforeClickOn(WebElement element, WebDriver driver) {
-						System.out.println("beforeClickOn=" + element);
-					}
-
-					@Override
-					public void afterNavigateForward(WebDriver driver) {
-						System.out.println("afterNavigateForward=" + driver);
-					}
-
-					@Override
-					public void afterClickOn(WebElement element, WebDriver driver) {
-						System.out.println("afterClickOn=" + driver);
-					}
-				});
-
 				System.out.println("## login User ");
-				WebElement element = wd.findElement(By.id("userPassword"));
+				WebElement element = d.findElement(By.id("userPassword"));
 				element.sendKeys(minerPass);
-				element = wd.findElement(By.id("loginbutton"));
+				element = d.findElement(By.id("loginbutton"));
 				element.click();
 
-				WebDriverWait w = new WebDriverWait(d, 5);
+				WebDriverWait w = new WebDriverWait(d, 7);
 				w.until(new ExpectedCondition<Boolean>() {
 					@Override
 					public Boolean apply(WebDriver d) {
-						d.findElement(By.xpath("//a[@href='#/miner']")).click();
-						WebDriverWait w = new WebDriverWait(d, 5);
-						w.until(new ExpectedCondition<Boolean>() {
-							@Override
-							public Boolean apply(WebDriver d) {
-								setupConfig(d);
-								return true;
-							}
+						System.out.println("apply=" + d.getCurrentUrl());
+						 d.findElement(By.xpath("//a[@href='#/miner']")).click();
 
-						});
+						setupConfig(d);
+						// w.until(new ExpectedCondition<Boolean>() {
+						// @Override
+						// public Boolean apply(WebDriver d) {
+						// System.out.println("apply="+d.getCurrentUrl());
+						// setupConfig(d);
+						// return true;
+						// }
+						// });
 
 						return true;
 					}
 				});
-
 				// firingDriver.quit();
 				return true;
 			}
@@ -112,9 +88,9 @@ public class MinerSetuper {
 
 	private void setupConfig(WebDriver d) {
 		System.out.println("setupConfig~");
-		WebElement element =  d.findElement(By.cssSelector("[ng-model*='pool.url']"));
-		element.clear();
-		element.sendKeys("xxx");
+		WebElement element = d.findElement(By.cssSelector("[ng-model*='pool.url']"));
+		// element.clear();
+		// element.sendKeys("xxx");
 
 	}
 
